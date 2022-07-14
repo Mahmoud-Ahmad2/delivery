@@ -5,6 +5,7 @@ import { AuthGuard } from './common/guard/auth.guard';
 import { Reflector } from '@nestjs/core';
 import { RolesGuard } from './common/guard/roles.guard';
 import { Logger } from './common/logger';
+import { UserService } from './modules/user/service/user.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -17,7 +18,7 @@ async function bootstrap() {
     }),
   );
   app.useGlobalGuards(
-    new AuthGuard(new Reflector()),
+    new AuthGuard(new Reflector(), app.get(UserService)),
     new RolesGuard(new Reflector()),
   );
   await app.listen(3000);

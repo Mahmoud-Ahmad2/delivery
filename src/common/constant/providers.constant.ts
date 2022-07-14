@@ -1,1 +1,3 @@
-export enum providersEnum {}
+export enum providersEnum {
+  USER_PROVIDER = 'USER_PROVIDER',
+}

@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize-typescript';
 import { ConfigService } from '@nestjs/config';
 import { DATABASE_PROVIDE, DATABASE_CONFIG } from '../common/constant';
-
+import { Users } from '../modules/user/model/user.model';
 export const databaseProviders = [
   {
     provide: DATABASE_PROVIDE,
@@ -10,7 +10,7 @@ export const databaseProviders = [
       const sequelize = new Sequelize({
         ...configService.get(DATABASE_CONFIG),
       });
-      sequelize.addModels([]);
+      sequelize.addModels([Users]);
       return sequelize;
     },
   },
