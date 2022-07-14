@@ -1,4 +1,4 @@
-import { IsEmail, Matches, IsString, IsNotEmpty } from 'class-validator';
+import { IsEmail, Matches, IsString, IsNotEmpty, IsIn } from 'class-validator';
 import { REGEX_PASSWORD } from '../../../common/constant';
 
 export class SignupUserDto {
@@ -28,5 +28,6 @@ export class SignupUserDto {
 
   @IsString()
   @IsNotEmpty()
+  @IsIn(['ADMIN', 'CLIENT', 'DELIVERER'])
   role: string;
 }

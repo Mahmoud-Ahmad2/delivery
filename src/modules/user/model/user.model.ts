@@ -35,7 +35,7 @@ export class Users extends Model {
   @Column(DataType.STRING)
   lastName: string;
 
-  @Column(DataType.STRING)
+  @Column(DataType.ENUM('ADMIN', 'CLIENT', 'DELIVERER'))
   role: string;
 
   @Column(DataType.DATE)

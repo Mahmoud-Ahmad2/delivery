@@ -4,6 +4,7 @@ import { providersEnum } from '../../../common/constant';
 import * as bcrypt from 'bcrypt';
 import { createToken } from '../../../common/utils';
 import { SignupUserDto } from '../dto/signupUser.dto';
+import { LoginDto } from '../dto/login.dto';
 
 @Injectable()
 export class UserService {
@@ -74,11 +75,9 @@ export class UserService {
     );
   }
 
-  async login(
-    inEmail: string,
-    inUsername: string,
-    inPassword: string,
-  ): Promise<object> {
+  async login(dto: LoginDto): Promise<object> {
+    const { inEmail, inUsername, inPassword } = dto;
+
     if (!inEmail && !inUsername) {
       throw new HttpException('Email or Username is required', 400);
     }

@@ -19,6 +19,6 @@ export class UserController {
   @Public()
   login(@Body() dto: LoginDto): Promise<object> {
     const { inEmail, inUsername, inPassword } = dto;
-    return this.userService.login(inEmail, inUsername, inPassword);
+    return this.userService.login(dto);
   }
 }

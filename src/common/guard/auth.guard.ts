@@ -6,10 +6,14 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { verifyToken } from 'src/common/utils';
+import { UserService } from 'src/modules/user/service/user.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private readonly reflector: Reflector) {}
+  constructor(
+    private readonly reflector: Reflector,
+    private readonly userService: UserService,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -31,6 +35,8 @@ export class AuthGuard implements CanActivate {
       const { id } = verify as any;
 
       if (id) {
+        const user = await this.userService.findOneByUserId(id);
+        request.user = user;
         return true;
       }
 
