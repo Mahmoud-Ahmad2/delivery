@@ -3,6 +3,7 @@ import { Users } from '../model/user.model';
 import { providersEnum } from '../../../common/constant';
 import * as bcrypt from 'bcrypt';
 import { createToken } from '../../../common/utils';
+import { SignupUserDto } from '../dto/signupUser.dto';
 
 @Injectable()
 export class UserService {
@@ -43,15 +44,9 @@ export class UserService {
     });
   }
 
-  async signup(
-    email: string,
-    password: string,
-    username: string,
-    firstName: string,
-    middleName: string,
-    lastName: string,
-    role: string,
-  ): Promise<Users> {
+  async signup(dto: SignupUserDto): Promise<Users> {
+    const { email, username, password, firstName, middleName, lastName, role } =
+      dto;
     const findEmail = await this.findOneByEmail(email);
     const findUsername = await this.findOneByUsername(username);
 

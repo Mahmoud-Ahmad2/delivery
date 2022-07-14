@@ -12,17 +12,7 @@ export class UserController {
   @Post('signup')
   @Public()
   insert(@Body() dto: SignupUserDto): Promise<Users> {
-    const { email, username, password, firstName, middleName, lastName, role } =
-      dto;
-    return this.userService.signup(
-      email,
-      password,
-      username,
-      firstName,
-      middleName,
-      lastName,
-      role,
-    );
+    return this.userService.signup(dto);
   }
 
   @Post('login')
