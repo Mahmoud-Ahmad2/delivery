@@ -8,7 +8,7 @@ import {
 } from 'sequelize-typescript';
 
 @Table({
-  tableName: 'Users',
+  tableName: 'Orders',
   underscored: true,
 })
 export class Orders extends Model {

@@ -9,7 +9,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      user_id: {
+      user_Id: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
@@ -17,7 +17,7 @@ module.exports = {
           key: 'id',
         },
       },
-      deliverer_id: {
+      deliverer_Id: {
         allowNull: true,
         type: Sequelize.INTEGER,
         references: {
@@ -40,6 +40,7 @@ module.exports = {
       status: {
         allowNull: false,
         type: Sequelize.STRING,
+        defaultValue: 'IN_PROGRESS',
       },
       created_At: {
         allowNull: false,

@@ -8,4 +8,4 @@ import { orderProviders } from './order.providers';
   providers: [OrderService, ...orderProviders],
   exports: [OrderService],
 })
-export class UserModule {}
+export class OrderModule {}
