@@ -32,6 +32,9 @@ export class Orders extends Model {
   @Column(DataType.INTEGER)
   quantity: number;
 
+  @Column(DataType.STRING)
+  status: string;
+
   @Column(DataType.INTEGER)
   deletedBy: number;
 
