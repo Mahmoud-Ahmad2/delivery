@@ -20,4 +20,8 @@ export class OrderService {
       quantity,
     });
   }
+
+  async findAll(): Promise<Orders[]> {
+    return await this.orderRepository.findAll();
+  }
 }

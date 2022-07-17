@@ -42,6 +42,30 @@ module.exports = {
         type: Sequelize.STRING,
         defaultValue: 'IN_PROGRESS',
       },
+      deleted_At: {
+        allowNull: true,
+        type: Sequelize.DATE,
+      },
+      deleted_By: {
+        allowNull: true,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
+      },
+      updated_By: {
+        allowNull: true,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
+      },
+      delivered_At: {
+        allowNull: true,
+        type: Sequelize.DATE,
+      },
       created_At: {
         allowNull: false,
         type: Sequelize.DATE,

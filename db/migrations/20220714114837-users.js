@@ -37,6 +37,7 @@ module.exports = {
       role: {
         allowNull: false,
         type: Sequelize.STRING,
+        enum: ['ADMIN', 'CLIENT', 'DELIVERER'],
       },
       created_At: {
         allowNull: false,
