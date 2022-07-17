@@ -18,7 +18,6 @@ export class UserController {
   @Post('login')
   @Public()
   login(@Body() dto: LoginDto): Promise<object> {
-    const { inEmail, inUsername, inPassword } = dto;
     return this.userService.login(dto);
   }
 }
