@@ -4,8 +4,11 @@ import { ConfigModule } from '@nestjs/config';
 import databaseConfig from 'config';
 import { UserModule } from './modules/user/user.module';
 import { OrderModule } from './modules/order/order.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+
 @Module({
   imports: [
+    EventEmitterModule.forRoot(),
     DatabaseModule,
     UserModule,
     OrderModule,
