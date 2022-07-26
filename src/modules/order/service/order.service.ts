@@ -5,6 +5,7 @@ import { OrderDto } from '../dto/order.dto';
 import { Logger } from '../../../common/logger';
 import { OrderCreatedEvent } from '../../../common/events/order-created.event';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { StatusDto } from '../dto/status.dto';
 
 @Injectable()
 export class OrderService {
@@ -13,13 +14,16 @@ export class OrderService {
     private readonly orderRepository: typeof Orders,
     private eventEmitter: EventEmitter2,
   ) {}
+
   private readonly logger = new Logger(OrderService.name);
+
   async create(dto: OrderDto, user: object): Promise<Orders> {
     const { id }: { id?: number } = user;
-    const { location, order, quantity } = dto;
+    const { latitude, longitude, order, quantity } = dto;
     this.logger.log(`User ${id} created order ${order}`);
     const orderCreated = new OrderCreatedEvent();
-    orderCreated.location = location;
+    orderCreated.latitude = latitude;
+    orderCreated.longitude = longitude;
     orderCreated.order = order;
     orderCreated.quantity = quantity;
     orderCreated.userId = id;
@@ -27,7 +31,8 @@ export class OrderService {
     this.eventEmitter.emit('order.created', orderCreated);
     return await this.orderRepository.create({
       userId: id,
-      location,
+      latitude,
+      longitude,
       order,
       quantity,
     });
@@ -36,5 +41,39 @@ export class OrderService {
   async findAll(): Promise<Orders[]> {
     this.logger.log('Find all orders by admin');
     return await this.orderRepository.findAll();
+  }
+
+  async findOne(id: string, userId: string): Promise<Orders> {
+    this.logger.log(`Find order ${id} , user ${userId}`);
+    return await this.orderRepository.findOne({ where: { id, userId } });
+  }
+
+  async update(id: string, dto: OrderDto, userId: string): Promise<any> {
+    this.logger.log(`Update order ${id} , user ${userId}`);
+    const { status } = await this.orderRepository.findOne({
+      where: { id, userId },
+    });
+    if (status === 'OnWay' || status === 'Arrived' || status === 'Completed') {
+      throw new HttpException(
+        'You can not update order that is in OnWay or Arrived or completed',
+        400,
+      );
+    }
+    return await this.orderRepository.update(dto, { where: { id, userId } });
+  }
+
+  async delete(id: string, userId: string): Promise<any> {
+    this.logger.log(`Delete order ${id} , user ${userId}`);
+    return await this.orderRepository.destroy({ where: { id, userId } });
+  }
+
+  async updateStatus(id: string, dto: StatusDto): Promise<any> {
+    this.logger.log(`Update status order ${id} `);
+    return await this.orderRepository.update(dto, { where: { id } });
+  }
+
+  async findOneById(id: string): Promise<Orders> {
+    this.logger.log(`Find order ${id}`);
+    return await this.orderRepository.findOne({ where: { id } });
   }
 }

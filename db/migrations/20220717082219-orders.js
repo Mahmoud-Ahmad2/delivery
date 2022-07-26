@@ -25,9 +25,13 @@ module.exports = {
           key: 'id',
         },
       },
-      location: {
+      latitude: {
         allowNull: false,
-        type: Sequelize.STRING,
+        type: Sequelize.DOUBLE,
+      },
+      longitude: {
+        allowNull: false,
+        type: Sequelize.DOUBLE,
       },
       order: {
         allowNull: false,

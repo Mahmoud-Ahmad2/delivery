@@ -1,19 +1,19 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsNumber, IsString, IsLatitude } from 'class-validator';
 
 export class OrderDto {
-  @IsString()
+  @IsLatitude()
   @IsNotEmpty()
-  @ApiProperty({ type: String, required: true, description: 'Order ID' })
-  location: string;
+  latitude: number;
+
+  @IsLatitude()
+  @IsNotEmpty()
+  longitude: number;
 
   @IsString()
   @IsNotEmpty()
-  @ApiProperty({ type: String, required: true, description: 'Order ID' })
   order: string;
 
   @IsNumber()
   @IsNotEmpty()
-  @ApiProperty({ type: Number, required: true, description: 'Order ID' })
   quantity: number;
 }

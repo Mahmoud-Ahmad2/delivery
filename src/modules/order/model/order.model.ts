@@ -10,6 +10,7 @@ import {
 @Table({
   tableName: 'Orders',
   underscored: true,
+  paranoid: true,
 })
 export class Orders extends Model {
   @PrimaryKey
@@ -23,8 +24,11 @@ export class Orders extends Model {
   @Column(DataType.INTEGER)
   delivererId: number;
 
-  @Column(DataType.STRING)
-  location: string;
+  @Column(DataType.DOUBLE)
+  latitude: number;
+
+  @Column(DataType.DOUBLE)
+  longitude: number;
 
   @Column(DataType.STRING)
   order: string;

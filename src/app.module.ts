@@ -5,6 +5,8 @@ import databaseConfig from 'config';
 import { UserModule } from './modules/user/user.module';
 import { OrderModule } from './modules/order/order.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+// import { AppGateway } from './app.gatway';
+import { NotificationModule } from './modules/notification/notification.module';
 
 @Module({
   imports: [
@@ -12,10 +14,12 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     DatabaseModule,
     UserModule,
     OrderModule,
+    NotificationModule,
     ConfigModule.forRoot({
       load: [databaseConfig],
       isGlobal: true,
     }),
   ],
+  providers: [],
 })
 export class AppModule {}

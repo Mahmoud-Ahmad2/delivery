@@ -1,5 +1,6 @@
 export class OrderCreatedEvent {
-  location: string;
+  latitude: number;
+  longitude: number;
   order: string;
   quantity: number;
   userId: number;

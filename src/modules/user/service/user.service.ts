@@ -93,7 +93,8 @@ export class UserService {
       throw new HttpException('User not found', 404);
     }
 
-    const { email, username, password, firstName, middleName, lastName } = user;
+    const { email, username, password, firstName, middleName, lastName, role } =
+      user;
     const checkPassword = await bcrypt.compare(inPassword, password);
 
     if (!checkPassword) {
@@ -110,6 +111,7 @@ export class UserService {
         firstName,
         middleName,
         lastName,
+        role,
       },
       token,
     };
