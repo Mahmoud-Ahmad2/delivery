@@ -34,6 +34,24 @@ export class UserService {
       .findOne({ where: { id: userId } });
   }
 
+  async getAllUsers(): Promise<Users[]> {
+    return await this.userRepository.findAll();
+  }
+
+  async deleteUser(userId: number): Promise<object> {
+    const user = await this.findOneByUserId(userId);
+    if (!user) {
+      throw new HttpException(Errors.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
+    }
+
+    await this.userRepository.destroy({
+      where: { id: userId },
+    });
+
+    this.logger.log(`User ${user.username} deleted`);
+    return { message: 'User deleted' };
+  }
+
   async signup(dto: SignupUserDto): Promise<Users> {
     const { email, username, password, firstName, middleName, lastName, role } =
       dto;

@@ -5,4 +5,5 @@ export const Errors = {
   EMAIL_OR_USERNAME_IS_REQUIRED: 'Email or Username is required',
   USER_NOT_FOUND: 'User not found',
   PASSWORD_INCORRECT: 'Password is incorrect',
+  DELETE_USER_FAILED: 'Delete user failed',
 };

@@ -61,4 +61,13 @@ export class Users extends Model {
 
   @Column(DataType.DATE)
   updatedAt: Date;
+
+  @Column(DataType.INTEGER)
+  deletedBy: number;
+
+  @Column(DataType.INTEGER)
+  updatedBy: number;
+
+  @Column(DataType.DATE)
+  deletedAt: Date;
 }
