@@ -16,15 +16,21 @@ export class UserService {
 
   private readonly logger = new Logger(UserService.name);
   async findOneByEmail(email: string): Promise<Users> {
-    return await this.userRepository.findOne({ where: { email } });
+    return await this.userRepository
+      .scope(['login'])
+      .findOne({ where: { email } });
   }
 
   async findOneByUsername(username: string): Promise<Users> {
-    return await this.userRepository.findOne({ where: { username } });
+    return await this.userRepository
+      .scope(['login'])
+      .findOne({ where: { username } });
   }
 
   async findOneByUserId(userId: number): Promise<Users> {
-    return await this.userRepository.findOne({ where: { id: userId } });
+    return await this.userRepository
+      .scope(['basic'])
+      .findOne({ where: { id: userId } });
   }
 
   async insert(

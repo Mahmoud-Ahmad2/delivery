@@ -5,11 +5,29 @@ import {
   PrimaryKey,
   AutoIncrement,
   DataType,
+  Scopes,
 } from 'sequelize-typescript';
+import { Role } from 'src/common/enum/role.enum';
 
+@Scopes(() => {
+  return {
+    basic: {
+      attributes: {
+        exclude: ['password', 'createdAt', 'updatedAt', 'deletedAt'],
+      },
+    },
+    login: {
+      attributes: {
+        exclude: ['createdAt', 'updatedAt', 'deletedAt'],
+      },
+    },
+  };
+})
 @Table({
   tableName: 'Users',
   underscored: true,
+  paranoid: true,
+  timestamps: true,
 })
 export class Users extends Model {
   @PrimaryKey
@@ -35,7 +53,7 @@ export class Users extends Model {
   @Column(DataType.STRING)
   lastName: string;
 
-  @Column(DataType.ENUM('ADMIN', 'CLIENT', 'DELIVERER'))
+  @Column(DataType.ENUM(Role.Admin, Role.Client, Role.Deliverer))
   role: string;
 
   @Column(DataType.DATE)
