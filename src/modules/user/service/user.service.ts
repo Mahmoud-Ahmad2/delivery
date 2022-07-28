@@ -5,6 +5,7 @@ import * as bcrypt from 'bcrypt';
 import { createToken } from '../../../common/utils';
 import { SignupUserDto } from '../dto/signupUser.dto';
 import { LoginDto } from '../dto/login.dto';
+import { Logger } from '../../../common/logger';
 
 @Injectable()
 export class UserService {
@@ -13,6 +14,7 @@ export class UserService {
     private readonly userRepository: typeof Users,
   ) {}
 
+  private readonly logger = new Logger(UserService.name);
   async findOneByEmail(email: string): Promise<Users> {
     return await this.userRepository.findOne({ where: { email } });
   }
@@ -64,6 +66,7 @@ export class UserService {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    this.logger.log(`User ${username} created`);
     return await this.insert(
       email,
       hashedPassword,
@@ -90,7 +93,8 @@ export class UserService {
       throw new HttpException('User not found', 404);
     }
 
-    const { email, username, password, firstName, middleName, lastName } = user;
+    const { email, username, password, firstName, middleName, lastName, role } =
+      user;
     const checkPassword = await bcrypt.compare(inPassword, password);
 
     if (!checkPassword) {
@@ -99,6 +103,7 @@ export class UserService {
 
     const token = await createToken(user.id);
 
+    this.logger.log(`User ${username} logged in`);
     return {
       data: {
         email,
@@ -106,6 +111,7 @@ export class UserService {
         firstName,
         middleName,
         lastName,
+        role,
       },
       token,
     };

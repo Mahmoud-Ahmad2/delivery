@@ -21,6 +21,7 @@ async function bootstrap() {
     new AuthGuard(new Reflector(), app.get(UserService)),
     new RolesGuard(new Reflector()),
   );
+
   await app.listen(3000);
 }
 bootstrap();
