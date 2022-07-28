@@ -6,7 +6,7 @@ import { createToken } from '../../../common/utils';
 import { SignupUserDto } from '../dto/signupUser.dto';
 import { LoginDto } from '../dto/login.dto';
 import { Logger } from '../../../common/logger';
-import { Errors } from '../../../common/constant';
+import { ERRORS } from '../../../common/constant';
 
 @Injectable()
 export class UserService {
@@ -41,7 +41,7 @@ export class UserService {
   async deleteUser(userId: number): Promise<object> {
     const user = await this.findOneByUserId(userId);
     if (!user) {
-      throw new HttpException(Errors.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
+      throw new HttpException(ERRORS.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
 
     await this.userRepository.destroy({
@@ -60,17 +60,17 @@ export class UserService {
 
     if (findEmail && findUsername) {
       throw new HttpException(
-        Errors.EMAIL_OR_USERNAME_ALREADY_EXISTS,
+        ERRORS.EMAIL_OR_USERNAME_ALREADY_EXISTS,
         HttpStatus.CONFLICT,
       );
     }
 
     if (findEmail) {
-      throw new HttpException(Errors.EMAIL_ALREADY_EXISTS, HttpStatus.CONFLICT);
+      throw new HttpException(ERRORS.EMAIL_ALREADY_EXISTS, HttpStatus.CONFLICT);
     }
 
     if (findUsername) {
-      throw new HttpException(Errors.EMAIL_ALREADY_EXISTS, HttpStatus.CONFLICT);
+      throw new HttpException(ERRORS.EMAIL_ALREADY_EXISTS, HttpStatus.CONFLICT);
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -103,7 +103,7 @@ export class UserService {
 
     if (!inEmail && !inUsername) {
       throw new HttpException(
-        Errors.EMAIL_OR_USERNAME_IS_REQUIRED,
+        ERRORS.EMAIL_OR_USERNAME_IS_REQUIRED,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -113,7 +113,7 @@ export class UserService {
       : await this.findOneByUsername(inUsername);
 
     if (!user) {
-      throw new HttpException(Errors.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
+      throw new HttpException(ERRORS.USER_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
 
     const { email, username, password, firstName, middleName, lastName, role } =
@@ -121,7 +121,7 @@ export class UserService {
     const checkPassword = await bcrypt.compare(inPassword, password);
 
     if (!checkPassword) {
-      throw new HttpException(Errors.PASSWORD_INCORRECT, HttpStatus.FORBIDDEN);
+      throw new HttpException(ERRORS.PASSWORD_INCORRECT, HttpStatus.FORBIDDEN);
     }
 
     const token = await createToken(user.id);
