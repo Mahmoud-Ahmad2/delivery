@@ -17,12 +17,8 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
-
-  app.setGlobalPrefix('api/v1');
-  const userService = app.get(UserService);
-
   app.useGlobalGuards(
-    new AuthGuard(new Reflector(), userService),
+    new AuthGuard(new Reflector(), app.get(UserService)),
     new RolesGuard(new Reflector()),
   );
 

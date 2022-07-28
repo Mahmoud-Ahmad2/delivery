@@ -49,18 +49,6 @@ module.exports = {
         type: Sequelize.DATE,
         defaultValue: Sequelize.fn('now'),
       },
-      deleted_At: {
-        allowNull: true,
-        type: Sequelize.DATE,
-      },
-      deleted_By: {
-        allowNull: true,
-        type: Sequelize.INTEGER,
-      },
-      updated_By: {
-        allowNull: true,
-        type: Sequelize.INTEGER,
-      },
     });
   },
 
