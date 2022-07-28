@@ -1,11 +1,11 @@
-import { Injectable, Inject, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, Inject, HttpException } from '@nestjs/common';
 import { Orders } from '../model/order.model';
+import { providersEnum } from '../../../common/constant';
 import { OrderDto } from '../dto/order.dto';
 import { Logger } from '../../../common/logger';
 import { OrderCreatedEvent } from '../../../common/events/order-created.event';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { StatusDto } from '../dto/status.dto';
-import { ERRORS, EVENTS, providersEnum } from '../../../common/constant';
 
 @Injectable()
 export class OrderService {
@@ -28,7 +28,7 @@ export class OrderService {
     orderCreated.quantity = quantity;
     orderCreated.userId = id;
     orderCreated.status = 'IN_PROGRESS';
-    this.eventEmitter.emit(EVENTS.ORDER_CREATED, orderCreated);
+    this.eventEmitter.emit('order.created', orderCreated);
     return await this.orderRepository.create({
       userId: id,
       latitude,
@@ -55,8 +55,8 @@ export class OrderService {
     });
     if (status === 'OnWay' || status === 'Arrived' || status === 'Completed') {
       throw new HttpException(
-        ERRORS.YOU_CAN_NOT_UPDATE_THE_ORDER,
-        HttpStatus.BAD_REQUEST,
+        'You can not update order that is in OnWay or Arrived or completed',
+        400,
       );
     }
     return await this.orderRepository.update(dto, { where: { id, userId } });

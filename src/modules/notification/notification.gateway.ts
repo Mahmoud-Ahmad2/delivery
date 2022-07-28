@@ -12,13 +12,11 @@ import { Socket, Server } from 'socket.io';
 import { UserService } from '../user/service/user.service';
 import { verifyToken } from '../../common/utils';
 import { OrderCreatedEvent } from 'src/common/events/order-created.event';
-import { OnEvent } from '@nestjs/event-emitter';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { Role } from 'src/common/enum/role.enum';
 import { GeneralEnum } from 'src/common/enum/general.enum';
 import { OrderService } from '../order/service/order.service';
 import { DistanceDto } from './dto/distance.dto';
-import { NotificationService } from './service/notification.service';
-import { NOTIFICATIONS, SUBSCRIBEMESSAGE, EVENTS } from 'src/common/constant';
 
 @WebSocketGateway()
 export class NotificationGateway
@@ -26,8 +24,8 @@ export class NotificationGateway
 {
   constructor(
     private readonly userService: UserService,
+    private eventEmitter: EventEmitter2,
     private readonly orderService: OrderService,
-    private readonly notificationService: NotificationService,
   ) {}
 
   private readonly logger = new Logger(NotificationGateway.name);
@@ -71,17 +69,37 @@ export class NotificationGateway
     this.logger.log(`Client disconnected: ${client.id}`);
   }
 
-  @OnEvent(EVENTS.ORDER_CREATED)
+  @OnEvent('order.created')
+  @SubscribeMessage('createOrder')
   async createOrder(@MessageBody() dto: OrderCreatedEvent) {
     this.server.to(GeneralEnum.Room).emit('createOrder', dto);
   }
 
-  @SubscribeMessage(SUBSCRIBEMESSAGE.GET_DISTANCE)
+  distanceInKm(lat1: number, lon1: number, lat2: number, lon2: number) {
+    lon1 = (lon1 * Math.PI) / 180;
+    lon2 = (lon2 * Math.PI) / 180;
+    lat1 = (lat1 * Math.PI) / 180;
+    lat2 = (lat2 * Math.PI) / 180;
+
+    const dlon = lon2 - lon1;
+    const dlat = lat2 - lat1;
+    const a =
+      Math.pow(Math.sin(dlat / 2), 2) +
+      Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon / 2), 2);
+
+    const c = 2 * Math.asin(Math.sqrt(a));
+
+    const r = 6371;
+
+    return c * r;
+  }
+
+  @SubscribeMessage('getDistance')
   async getDistance(@MessageBody() dto: DistanceDto, client: Socket) {
     const { latitude, longitude, orderId } = dto;
     const order = await this.orderService.findOneById(orderId);
 
-    const distance = await this.notificationService.distanceInKm(
+    const distance = this.distanceInKm(
       latitude,
       longitude,
       order.latitude,
@@ -90,7 +108,7 @@ export class NotificationGateway
 
     if (distance < 1) {
       this.server.to(GeneralEnum.Room + order.userId).emit('getDistance', {
-        message: NOTIFICATIONS.DISTANCE_LESS_THAN_1,
+        message: 'You are in the range of the order',
       });
     }
   }

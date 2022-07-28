@@ -1,4 +1,3 @@
-import { Transform, TransformFnParams } from 'class-transformer';
 import {
   IsEmail,
   IsNotEmpty,
@@ -9,13 +8,11 @@ import {
 import { REGEX_PASSWORD } from '../../../common/constant';
 
 export class LoginDto {
-  @Transform(({ value }: TransformFnParams) => value.trim())
   @IsEmail()
   @IsOptional()
   @IsNotEmpty()
   inEmail: string;
 
-  @Transform(({ value }: TransformFnParams) => value.trim())
   @IsString()
   @IsOptional()
   @IsNotEmpty()
